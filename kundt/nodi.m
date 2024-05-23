@@ -1,7 +1,7 @@
 %funziona con vettori n*2 con n numero pari, meta punti prima e meta punti
 %dopo il minimo...
 
-data = readmatrix("data_2317.csv");
+data = readmatrix("data_1177.csv");
 
 output = [];
 for i=0:(length(data)/4)-1
@@ -14,9 +14,10 @@ function [x, dx] = intersezione(punti)
     prima = punti(1:length(punti)/2, :);
     dopo = punti((length(punti)/2+1): size(punti,1), :);
 
-    [M, dM, Q, dQ] = regLin([prima(:,1); dopo(:,1)], [prima(:,2); -dopo(:,2)]);
+    xmean = mean([prima(:,1); dopo(:,1)]);
+    [M, dM, Q, dQ] = regLin([prima(:,1) - xmean; dopo(:,1) - xmean], [prima(:,2); -dopo(:,2)]);
     
-    x = -Q/M;
+    x = (-Q/M) + xmean;
     dx = sqrt((1/M)^2*dQ^2 + (Q/(M^2))^2*dM^2);
 end
 
@@ -46,7 +47,6 @@ function [A, dA, B, dB] = regLin(X, Y)
     A = (1/Det)*(sum(dY2)*sum(XYdY2)-sum(XdY2)*sum(YdY2));
     dB = sqrt((1/Det)*sum(X2dY2));
     dA = sqrt((1/Det)*sum(dY2));
-    fprintf("A: %f +- %f - B: %f +- %f\n", A, dA, B, dB);
 
     figure();
     scatter(X, Y);
